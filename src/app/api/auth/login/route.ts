@@ -14,14 +14,14 @@ export async function POST(request: Request) {
     cookieStore.set("accessToken", accessToken, {
       path: "/",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "strict",
       secure: true,
       expires: decodedAccessToken.exp * 1000,
     });
     cookieStore.set("refreshToken", refreshToken, {
       path: "/",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "strict",
       secure: true,
       expires: decodedRefreshToken.exp * 1000,
     });

@@ -1,4 +1,7 @@
-import { clsx, type ClassValue } from "clsx";
+import { toast } from "@/hooks/use-toast";
+import { EntityError } from "@/lib/http";
+import { type ClassValue, clsx } from "clsx";
+import { UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { useToast } from "@/hooks/use-toast";
 import { EntityError } from "@/lib/http";
@@ -19,7 +22,6 @@ export const handleErrorApi = ({
   setError?: UseFormSetError<any>;
   duration?: number;
 }) => {
-  const { toast } = useToast();
   if (error instanceof EntityError && setError) {
     error.payload.errors.forEach((item) => {
       setError(item.field, {

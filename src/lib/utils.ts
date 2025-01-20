@@ -21,6 +21,7 @@ export const handleErrorApi = ({
   duration?: number;
 }) => {
   if (error instanceof EntityError && setError) {
+    console.log("error cus: ", error.payload);
     error.payload.errors.forEach((item) => {
       setError(item.field, {
         type: "server",
@@ -41,3 +42,8 @@ export const getAccessTokenFromLocalStorage = () =>
   isBrowser ? localStorage.getItem("accessToken") : null;
 export const getRefreshTokenToLocalStorage = () =>
   isBrowser ? localStorage.getItem("refreshToken") : null;
+export const setAccessTokenToLocalStorage = (value: string) =>
+  isBrowser && localStorage.setItem("accessToken", value);
+
+export const setRefreshTokenToLocalStorage = (value: string) =>
+  isBrowser && localStorage.setItem("refreshToken", value);

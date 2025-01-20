@@ -85,6 +85,7 @@ const request = async <Response>(
       ? envConfig.NEXT_PUBLIC_API_ENDPOINT
       : options.baseUrl;
   const fullUrl = `${baseUrl}/${normalizePath(url)}`;
+  console.log("fullUrl: ", fullUrl);
   const res = await fetch(fullUrl, {
     ...options,
     headers: {

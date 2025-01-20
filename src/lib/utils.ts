@@ -4,8 +4,6 @@ import { type ClassValue, clsx } from "clsx";
 import { UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { useToast } from "@/hooks/use-toast";
-import { EntityError } from "@/lib/http";
-import { UseFormSetError } from "react-hook-form";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

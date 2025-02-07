@@ -3,7 +3,6 @@ import { EntityError } from "@/lib/http";
 import { type ClassValue, clsx } from "clsx";
 import { UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
-import { useToast } from "@/hooks/use-toast";
 import jwt from "jsonwebtoken";
 import authApiRequest from "@/apiRequests/auth";
 
@@ -50,6 +49,11 @@ export const setAccessTokenToLocalStorage = (value: string) =>
 export const setRefreshTokenToLocalStorage = (value: string) =>
   isBrowser && localStorage.setItem("refreshToken", value);
 
+export const removeTokensFromLocalStorage = () => {
+  isBrowser && localStorage.removeItem("accessToken");
+  isBrowser && localStorage.removeItem("refreshToken");
+};
+
 export const checkAndRefreshToken = async (param?: {
   onError?: () => void;
   onSuccess?: () => void;
@@ -71,9 +75,12 @@ export const checkAndRefreshToken = async (param?: {
   };
   // Thời điểm hết hạn của token là tính theo epoch time (s)
   // Còn khi các bạn dùng cú pháp new Date().getTime() thì nó sẽ trả về epoch time (ms)
-  const now = Math.round(new Date().getTime() / 1000);
-  // trường hợp refresh token hết hạn thì không xử lý nữa
-  if (decodedRefreshToken.exp <= now) return;
+  const now = new Date().getTime() / 1000 - 1; // exp trong token có thể bị lệch so với thời gian hết hạn ở cookie
+  // trường hợp refresh token hết hạn thì logout
+  if (decodedRefreshToken.exp <= now) {
+    removeTokensFromLocalStorage();
+    return param?.onError && param.onError();
+  }
   // Ví dụ access token của chúng ta có thời gian hết hạn là 10s
   // thì mình sẽ kiểm tra còn 1/3 thời gian (3s) thì mình sẽ cho refresh token lại
   // Thời gian còn lại sẽ tính dựa trên công thức: decodedAccessToken.exp - now

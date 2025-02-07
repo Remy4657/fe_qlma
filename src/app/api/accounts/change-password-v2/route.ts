@@ -18,8 +18,6 @@ export async function PUT(request: Request) {
     );
   }
   try {
-    console.log("body: ", body);
-
     const { payload } = await accountApiRequest.sChangePasswordV2(
       accessToken,
       body

@@ -16,11 +16,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginMutation } from "@/queries/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { handleErrorApi } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useAppContext } from "@/components/app-provider";
 
 export default function LoginForm() {
   const router = useRouter();
   const loginMutation = useLoginMutation();
+  const searchParams = useSearchParams();
+  const clearTokens = searchParams.get("clearTokens");
+  const { setIsAuth } = useAppContext();
+
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -28,7 +34,11 @@ export default function LoginForm() {
       password: "",
     },
   });
-
+  useEffect(() => {
+    if (clearTokens) {
+      setIsAuth(false);
+    }
+  }, []);
   const onSubmit = async (data: LoginBodyType) => {
     // Khi nhấn submit thì React hook form sẽ validate cái form bằng zod schema ở client trước
     // Nếu không pass qua vòng này thì sẽ không gọi api
@@ -38,6 +48,7 @@ export default function LoginForm() {
       toast({
         description: result.payload.message,
       });
+      setIsAuth(true);
       router.push("/manage/dashboard");
     } catch (error: any) {
       handleErrorApi({

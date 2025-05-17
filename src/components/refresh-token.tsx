@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 // Những page sau sẽ không check refesh token
 const UNAUTHENTICATED_PATH = ["/login", "/logout", "/refresh-token"];
+
 export default function RefreshToken() {
   const pathname = usePathname();
   const router = useRouter();
